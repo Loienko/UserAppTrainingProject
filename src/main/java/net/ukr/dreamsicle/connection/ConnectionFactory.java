@@ -1,33 +1,37 @@
 package net.ukr.dreamsicle.connection;
 
+
 import org.apache.log4j.Logger;
 import org.postgresql.Driver;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
 public class ConnectionFactory implements AutoCloseable {
     public static final String CONNECTION_IS_CLOSE = "Connection is close";
+    public static final String UNABLE_TO_FIND_CONFIG_PROPERTIES = "Sorry, unable to find config.properties";
     private static final Logger LOGGER = Logger.getLogger(ConnectionFactory.class);
 
-    private static String jdbcURL = "jdbc:postgresql://localhost:5432/postgres?useSSL=false";
-    private static String jdbcUsername = "postgres";
-    private static String jdbcPassword = "docker";
+    public static Connection getConnection() {
+        try (InputStream input = ConnectionFactory.class.getClassLoader().getResourceAsStream("application.properties")) {
+            Properties properties = new Properties();
+            if (input == null) {
+                LOGGER.error(UNABLE_TO_FIND_CONFIG_PROPERTIES);
+                return null;
+            }
+            properties.load(input);
 
-    public static java.sql.Connection getConnection() {
-        try {
-            Properties props = new Properties();
-            props.setProperty("user", jdbcUsername);
-            props.setProperty("password", jdbcPassword);
             DriverManager.registerDriver(new Driver());
-            return DriverManager.getConnection(jdbcURL, props);
-        } catch (SQLException e) {
+            return DriverManager.getConnection(properties.getProperty("db.url"), properties.getProperty("db.username"), properties.getProperty("db.password"));
+        } catch (SQLException | IOException e) {
             LOGGER.error(e);
             throw new RuntimeException();
         }
     }
-
 
     @Override
     public void close() throws Exception {

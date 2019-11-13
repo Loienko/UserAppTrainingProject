@@ -4,5 +4,8 @@ CREATE TABLE public.user
     username   varchar(50) NOT NULL,
     first_name varchar(50) NOT NULL,
     last_name  varchar(50) NOT NULL,
-    role_id    int REFERENCES role (id)
+    role_id    int         NOT NULL,
+    CONSTRAINT fk_user_role_id
+        FOREIGN KEY (role_id)
+        REFERENCES role (role_id)
 );

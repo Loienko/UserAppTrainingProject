@@ -3,15 +3,19 @@ package net.ukr.dreamsicle.entity;
 import java.util.Objects;
 
 public class Role {
-    private Integer id;
+    private Integer roleId;
     private String roleName;
     private String roleDescription;
 
     public Role() {
     }
 
-    public Role(Integer id, String roleName, String roleDescription) {
-        this.id = id;
+    public Role(String roleName, String roleDescription) {
+        this(null, roleName, roleDescription);
+    }
+
+    public Role(Integer roleId, String roleName, String roleDescription) {
+        this.roleId = roleId;
         this.roleName = roleName;
         this.roleDescription = roleDescription;
     }
@@ -19,7 +23,7 @@ public class Role {
     @Override
     public String toString() {
         return "Role{" +
-                "id=" + id +
+                "id=" + roleId +
                 ", roleName='" + roleName + '\'' +
                 ", roleDescription='" + roleDescription + '\'' +
                 '}';
@@ -30,22 +34,22 @@ public class Role {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Role role = (Role) o;
-        return Objects.equals(id, role.id) &&
+        return Objects.equals(roleId, role.roleId) &&
                 Objects.equals(roleName, role.roleName) &&
                 Objects.equals(roleDescription, role.roleDescription);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, roleName, roleDescription);
+        return Objects.hash(roleId, roleName, roleDescription);
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
     public String getRoleName() {

@@ -9,14 +9,8 @@ public class User {
     private String lastName;
     private Role roleId;
 
-    public User() {
-    }
-
     public User(String userName, String firstName, String lastName, Role roleId) {
-        this.userName = userName;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.roleId = roleId;
+        this(null, userName, firstName, lastName, roleId);
     }
 
     public User(Integer id, String userName, String firstName, String lastName, Role roleId) {

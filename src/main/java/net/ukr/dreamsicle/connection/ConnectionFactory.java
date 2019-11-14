@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.Properties;
 
 public class ConnectionFactory implements AutoCloseable {
@@ -20,12 +21,9 @@ public class ConnectionFactory implements AutoCloseable {
 
     public static Connection getConnection() {
         try (InputStream input = ConnectionFactory.class.getClassLoader().getResourceAsStream("application.properties")) {
+
             Properties properties = new Properties();
-            if (input == null) {
-                LOGGER.error(UNABLE_TO_FIND_CONFIG_PROPERTIES);
-                return null;
-            }
-            properties.load(input);
+            properties.load(Optional.ofNullable(input).orElseThrow(() -> new MyOwnException(UNABLE_TO_FIND_CONFIG_PROPERTIES)));
 
             DriverManager.registerDriver(new Driver());
             return DriverManager.getConnection(properties.getProperty("db.url"), properties.getProperty("db.username"), properties.getProperty("db.password"));

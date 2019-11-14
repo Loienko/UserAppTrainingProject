@@ -3,17 +3,17 @@ package net.ukr.dreamsicle.entity;
 import java.util.Objects;
 
 public class User {
-    private Integer id;
-    private String userName;
-    private String firstName;
-    private String lastName;
-    private Role roleId;
+    private final Integer id;
+    private final String userName;
+    private final String firstName;
+    private final String lastName;
+    private final Integer roleId;
 
-    public User(String userName, String firstName, String lastName, Role roleId) {
+    public User(String userName, String firstName, String lastName, Integer roleId) {
         this(null, userName, firstName, lastName, roleId);
     }
 
-    public User(Integer id, String userName, String firstName, String lastName, Role roleId) {
+    public User(Integer id, String userName, String firstName, String lastName, Integer roleId) {
         this.id = id;
         this.userName = userName;
         this.firstName = firstName;
@@ -53,39 +53,23 @@ public class User {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 
-    public Role getRoleId() {
+    public Integer getRoleId() {
         return roleId;
-    }
-
-    public void setRoleId(Role roleId) {
-        this.roleId = roleId;
     }
 }

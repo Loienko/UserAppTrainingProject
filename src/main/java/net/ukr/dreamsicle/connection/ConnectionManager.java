@@ -13,14 +13,14 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Properties;
 
-public class ConnectionFactory implements AutoCloseable {
+public class ConnectionManager implements AutoCloseable {
     public static final String CONNECTION_IS_CLOSE = "Connection is close";
     public static final String UNABLE_TO_FIND_CONFIG_PROPERTIES = "Sorry, unable to find application.properties";
     public static final String DATABASE_CONNECTION_ERROR = "Database connection error";
-    private static final Logger LOGGER = Logger.getLogger(ConnectionFactory.class);
+    private static final Logger LOGGER = Logger.getLogger(ConnectionManager.class);
 
     public static Connection getConnection() {
-        try (InputStream input = ConnectionFactory.class.getClassLoader().getResourceAsStream("application.properties")) {
+        try (InputStream input = ConnectionManager.class.getClassLoader().getResourceAsStream("application.properties")) {
 
             Properties properties = new Properties();
             properties.load(Optional.ofNullable(input).orElseThrow(() -> new MyOwnException(UNABLE_TO_FIND_CONFIG_PROPERTIES)));

@@ -3,12 +3,9 @@ package net.ukr.dreamsicle.entity;
 import java.util.Objects;
 
 public class Role {
-    private Integer roleId;
-    private String roleName;
-    private String roleDescription;
-
-    public Role() {
-    }
+    private final Integer roleId;
+    private final String roleName;
+    private final String roleDescription;
 
     public Role(String roleName, String roleDescription) {
         this(null, roleName, roleDescription);
@@ -23,7 +20,7 @@ public class Role {
     @Override
     public String toString() {
         return "Role{" +
-                "id=" + roleId +
+                "roleId=" + roleId +
                 ", roleName='" + roleName + '\'' +
                 ", roleDescription='" + roleDescription + '\'' +
                 '}';
@@ -48,23 +45,11 @@ public class Role {
         return roleId;
     }
 
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
-    }
-
     public String getRoleName() {
         return roleName;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-
     public String getRoleDescription() {
         return roleDescription;
-    }
-
-    public void setRoleDescription(String roleDescription) {
-        this.roleDescription = roleDescription;
     }
 }

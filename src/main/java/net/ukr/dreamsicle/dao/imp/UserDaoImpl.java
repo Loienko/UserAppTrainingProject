@@ -3,11 +3,8 @@ package net.ukr.dreamsicle.dao.imp;
 import net.ukr.dreamsicle.dao.AbstractDao;
 import net.ukr.dreamsicle.dao.Dao;
 import net.ukr.dreamsicle.entity.User;
-import net.ukr.dreamsicle.exception.ApplicationException;
 import net.ukr.dreamsicle.exception.ThrowingFunction;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,26 +24,12 @@ public class UserDaoImpl extends AbstractDao implements Dao<User> {
                     User user = null;
                     try (var resultSet = preparedStatement.executeQuery()) {
                         while (resultSet.next()) {
-                            user = transformResultSetToUser(resultSet);
+                            user = User.builder().transformFromResultSetToUser(resultSet);
                         }
                     }
                     return user;
                 })
         );
-    }
-
-    private User transformResultSetToUser(ResultSet resultSet) {
-        try {
-            return new User(
-                    resultSet.getInt(1),
-                    resultSet.getString(2),
-                    resultSet.getString(3),
-                    resultSet.getString(4),
-                    resultSet.getInt(5)
-            );
-        } catch (SQLException e) {
-            throw new ApplicationException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
-        }
     }
 
     public List<User> findAll() {
@@ -55,7 +38,7 @@ public class UserDaoImpl extends AbstractDao implements Dao<User> {
         return executeStatement(() -> FIND_ALL, ThrowingFunction.unchecked(preparedStatement -> {
                     try (var resultSet = preparedStatement.executeQuery()) {
                         while (resultSet.next()) {
-                            list.add(transformResultSetToUser(resultSet));
+                            list.add(User.builder().transformFromResultSetToUser(resultSet));
                         }
                     }
                     return list;

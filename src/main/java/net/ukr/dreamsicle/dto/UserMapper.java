@@ -28,12 +28,12 @@ public class UserMapper implements Factory<User, UserDto> {
     @Override
     public User fromDto(UserDto userDto) {
         Optional.ofNullable(userDto).orElseThrow(() -> new ApplicationException(INPUT_PARAMETER_NOT_FOUND));
-        return new User(
-                userDto.getUserName(),
-                userDto.getFirstName(),
-                userDto.getLastName(),
-                userDto.getRoleId()
-        );
+        return User.builder()
+                .userName(userDto.getUserName())
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
+                .roleId(userDto.getRoleId())
+                .build();
     }
 
     @Override

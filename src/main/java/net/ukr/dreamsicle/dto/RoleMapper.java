@@ -24,11 +24,11 @@ public class RoleMapper implements Factory<Role, RoleDto> {
     @Override
     public Role fromDto(RoleDto roleDto) {
         Optional.ofNullable(roleDto).orElseThrow(() -> new ApplicationException(INPUT_PARAMETER_NOT_FOUND));
-        return new Role(
-                roleDto.getRoleId(),
-                roleDto.getRoleName(),
-                roleDto.getRoleDescription()
-        );
+        return Role.builder()
+                .roleId(roleDto.getRoleId())
+                .roleName(roleDto.getRoleName())
+                .roleDescription(roleDto.getRoleDescription())
+                .build();
     }
 
     @Override

@@ -3,12 +3,9 @@ package net.ukr.dreamsicle.dto;
 import java.util.Objects;
 
 public class RoleDto {
-    private Integer roleId;
-    private String roleName;
-    private String roleDescription;
-
-    public RoleDto() {
-    }
+    private final Integer roleId;
+    private final String roleName;
+    private final String roleDescription;
 
     public RoleDto(Integer roleId, String roleName, String roleDescription) {
         this.roleId = roleId;
@@ -48,27 +45,15 @@ public class RoleDto {
         return roleId;
     }
 
-    public void setRoleId(final Integer roleId) {
-        this.roleId = roleId;
-    }
-
     public String getRoleName() {
         return roleName;
-    }
-
-    public void setRoleName(final String roleName) {
-        this.roleName = roleName;
     }
 
     public String getRoleDescription() {
         return roleDescription;
     }
 
-    public void setRoleDescription(final String roleDescription) {
-        this.roleDescription = roleDescription;
-    }
-
-    static class RoleDtoBuilder {
+    public static class RoleDtoBuilder {
         private Integer roleId;
         private String roleName;
         private String roleDescription;
@@ -102,6 +87,15 @@ public class RoleDto {
                     ", roleName='" + roleName + '\'' +
                     ", roleDescription='" + roleDescription + '\'' +
                     '}';
+        }
+
+        public String toJson(RoleDto roleDto) {
+            return new StringBuilder()
+                    .append("{\n")
+                    .append("\t\"role_id\": \"").append(roleDto.getRoleId()).append("\",\n")
+                    .append("\t\"role_name\": \"").append(roleDto.getRoleName()).append("\",\n")
+                    .append("\t\"role_description\": \"").append(roleDto.getRoleDescription()).append("\" \n")
+                    .append("}").toString();
         }
     }
 }

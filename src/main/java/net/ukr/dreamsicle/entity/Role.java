@@ -1,20 +1,26 @@
 package net.ukr.dreamsicle.entity;
 
+import net.ukr.dreamsicle.exception.ApplicationException;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
+
+import static net.ukr.dreamsicle.dao.imp.RoleDaoImpl.PROBLEM_OF_WORKING_WITH_THE_DATABASE;
 
 public class Role {
     private final Integer roleId;
     private final String roleName;
     private final String roleDescription;
 
-    public Role(String roleName, String roleDescription) {
-        this(null, roleName, roleDescription);
-    }
-
-    public Role(Integer roleId, String roleName, String roleDescription) {
+    private Role(Integer roleId, String roleName, String roleDescription) {
         this.roleId = roleId;
         this.roleName = roleName;
         this.roleDescription = roleDescription;
+    }
+
+    public static Role.RoleBuilder builder() {
+        return new Role.RoleBuilder();
     }
 
     @Override
@@ -51,5 +57,52 @@ public class Role {
 
     public String getRoleDescription() {
         return roleDescription;
+    }
+
+    public static class RoleBuilder {
+        private Integer roleId;
+        private String roleName;
+        private String roleDescription;
+
+        public RoleBuilder() {
+        }
+
+        public Role.RoleBuilder roleId(final Integer roleId) {
+            this.roleId = roleId;
+            return this;
+        }
+
+        public Role.RoleBuilder roleName(final String roleName) {
+            this.roleName = roleName;
+            return this;
+        }
+
+        public Role.RoleBuilder roleDescription(final String roleDescription) {
+            this.roleDescription = roleDescription;
+            return this;
+        }
+
+        public Role build() {
+            return new Role(this.roleId, this.roleName, this.roleDescription);
+        }
+
+        @Override
+        public String toString() {
+            return "RoleDtoBuilder{" +
+                    "roleId=" + roleId +
+                    ", roleName='" + roleName + '\'' +
+                    ", roleDescription='" + roleDescription + '\'' +
+                    '}';
+        }
+
+        public Role transformFromResultSetToRole(ResultSet resultSet) {
+            try {
+                return new Role(resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3));
+            } catch (SQLException e) {
+                throw new ApplicationException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
+            }
+        }
     }
 }

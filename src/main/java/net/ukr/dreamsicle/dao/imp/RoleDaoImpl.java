@@ -3,11 +3,8 @@ package net.ukr.dreamsicle.dao.imp;
 import net.ukr.dreamsicle.dao.AbstractDao;
 import net.ukr.dreamsicle.dao.Dao;
 import net.ukr.dreamsicle.entity.Role;
-import net.ukr.dreamsicle.exception.ApplicationException;
 import net.ukr.dreamsicle.exception.ThrowingFunction;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +25,7 @@ public class RoleDaoImpl extends AbstractDao implements Dao<Role> {
                     Role role = null;
                     try (var resultSet = preparedStatement.executeQuery()) {
                         while (resultSet.next()) {
-                            role = transformResultSetToRole(resultSet);
+                            role = Role.builder().transformFromResultSetToRole(resultSet);
                         }
                     }
                     return role;
@@ -43,24 +40,12 @@ public class RoleDaoImpl extends AbstractDao implements Dao<Role> {
         return executeStatement(() -> FIND_ALL, ThrowingFunction.unchecked(preparedStatement -> {
                     try (var resultSet = preparedStatement.executeQuery()) {
                         while (resultSet.next()) {
-                            list.add(transformResultSetToRole(resultSet));
+                            list.add(Role.builder().transformFromResultSetToRole(resultSet));
                         }
                     }
                     return list;
                 })
         );
-    }
-
-    private Role transformResultSetToRole(ResultSet resultSet) {
-        try {
-            return new Role(
-                    resultSet.getInt(1),
-                    resultSet.getString(2),
-                    resultSet.getString(3)
-            );
-        } catch (SQLException e) {
-            throw new ApplicationException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
-        }
     }
 
     @Override

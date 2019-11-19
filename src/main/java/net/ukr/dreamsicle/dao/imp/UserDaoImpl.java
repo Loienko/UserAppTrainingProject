@@ -1,109 +1,99 @@
 package net.ukr.dreamsicle.dao.imp;
 
-import net.ukr.dreamsicle.connection.ConnectionManager;
+import net.ukr.dreamsicle.dao.AbstractDao;
 import net.ukr.dreamsicle.dao.Dao;
 import net.ukr.dreamsicle.entity.User;
-import net.ukr.dreamsicle.exception.MyOwnException;
+import net.ukr.dreamsicle.exception.ApplicationException;
+import net.ukr.dreamsicle.exception.ThrowingFunction;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.ukr.dreamsicle.dao.imp.RoleDaoImpl.PROBLEM_OF_WORKING_WITH_THE_DATABASE;
+public class UserDaoImpl extends AbstractDao implements Dao<User> {
 
-public class UserDaoImpl implements Dao<User> {
+    public static final String PROBLEM_OF_WORKING_WITH_THE_DATABASE = "Sorry, problem of working with the database.\t";
+    private static final String FIND_ALL = "SELECT * FROM users.public.user ORDER BY id";
+    private static final String CREATE = "INSERT INTO users.public.user(username, first_name, last_name, role_id) VALUES (?, ?, ?, ?)";
+    private static final String FIND_BY_ID = "SELECT * FROM users.public.user WHERE id = ?";
+    private static final String DELETE = "DELETE FROM users.public.user WHERE id = ?";
+    private static final String UPDATE = "Update users.public.user set username = ?, first_name = ?, last_name = ?, role_id =? WHERE id = ?";
 
     @Override
     public User findById(Integer id) {
-        var sqlQuery = "SELECT * FROM users.public.user WHERE id = ?";
-        User user = null;
-
-        try (var connection = ConnectionManager.getConnection();
-             var preparedStatement = connection.prepareStatement(sqlQuery)) {
-            try (var resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    user = new User(
-                            resultSet.getInt(1),
-                            resultSet.getString(2),
-                            resultSet.getString(3),
-                            resultSet.getString(4),
-                            resultSet.getInt(5)
-                    );
-                }
-            }
-        } catch (SQLException e) {
-            throw new MyOwnException(PROBLEM_OF_WORKING_WITH_THE_DATABASE, e);
-        }
-        return user;
+        return executeStatement(() -> FIND_BY_ID, ThrowingFunction.unchecked(preparedStatement -> {
+                    preparedStatement.setInt(1, id);
+                    User user = null;
+                    try (var resultSet = preparedStatement.executeQuery()) {
+                        while (resultSet.next()) {
+                            user = transformResultSetToUser(resultSet);
+                        }
+                    }
+                    return user;
+                })
+        );
     }
 
-    @Override
+    private User transformResultSetToUser(ResultSet resultSet) {
+        try {
+            return new User(
+                    resultSet.getInt(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getString(4),
+                    resultSet.getInt(5)
+            );
+        } catch (SQLException e) {
+            throw new ApplicationException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
+        }
+    }
+
     public List<User> findAll() {
         List<User> list = new ArrayList<>();
-        var sqlQuery = "SELECT * FROM users.public.user ORDER BY id";
-        try (var connection = ConnectionManager.getConnection();
-             var preparedStatement = connection.prepareStatement(sqlQuery)) {
-            try (var resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    list.add(new User(
-                            resultSet.getInt(1),
-                            resultSet.getString(2),
-                            resultSet.getString(3),
-                            resultSet.getString(4),
-                            resultSet.getInt(5)
-                    ));
-                }
-            }
-        } catch (SQLException e) {
-            throw new MyOwnException(PROBLEM_OF_WORKING_WITH_THE_DATABASE, e);
-        }
-        return list;
+
+        return executeStatement(() -> FIND_ALL, ThrowingFunction.unchecked(preparedStatement -> {
+                    try (var resultSet = preparedStatement.executeQuery()) {
+                        while (resultSet.next()) {
+                            list.add(transformResultSetToUser(resultSet));
+                        }
+                    }
+                    return list;
+                })
+        );
     }
 
-    @Override
     public Integer create(User user) {
-        var sqlQuery = "INSERT INTO users.public.user(username, first_name, last_name, role_id) VALUES (?, ?, ?, ?)";
-        try (var connection = ConnectionManager.getConnection();
-             var preparedStatement = connection.prepareStatement(sqlQuery)) {
+        return executeStatement(() -> CREATE, ThrowingFunction.unchecked(preparedStatement -> {
+                    preparedStatement.setString(1, user.getUserName());
+                    preparedStatement.setString(2, user.getFirstName());
+                    preparedStatement.setString(3, user.getLastName());
+                    preparedStatement.setInt(4, user.getRoleId());
 
-            preparedStatement.setString(1, user.getUserName());
-            preparedStatement.setString(2, user.getFirstName());
-            preparedStatement.setString(3, user.getLastName());
-            preparedStatement.setInt(4, user.getRoleId());
-
-            return preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new MyOwnException(PROBLEM_OF_WORKING_WITH_THE_DATABASE, e);
-        }
+                    return preparedStatement.executeUpdate();
+                })
+        );
     }
 
-    @Override
     public Integer delete(Integer id) {
-        var sqlQuery = "DELETE FROM users.public.user WHERE id = ?";
-        try (var connection = ConnectionManager.getConnection();
-             var preparedStatement = connection.prepareStatement(sqlQuery)) {
-            preparedStatement.setInt(1, id);
-            return preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new MyOwnException(PROBLEM_OF_WORKING_WITH_THE_DATABASE, e);
-        }
+        return executeStatement(() -> DELETE, ThrowingFunction.unchecked(preparedStatement -> {
+                    preparedStatement.setInt(1, id);
+
+                    return preparedStatement.executeUpdate();
+                })
+        );
     }
 
-    @Override
     public Integer update(Integer id, User user) {
-        var sqlQuery = "Update users.public.user set username = ?, first_name = ?, last_name = ?, role_id =? WHERE id = ?";
+        return executeStatement(() -> UPDATE, ThrowingFunction.unchecked(preparedStatement -> {
+                    preparedStatement.setString(1, user.getUserName());
+                    preparedStatement.setString(2, user.getFirstName());
+                    preparedStatement.setString(3, user.getLastName());
+                    preparedStatement.setInt(4, user.getRoleId());
+                    preparedStatement.setInt(5, id);
 
-        try (var connection = ConnectionManager.getConnection();
-             var preparedStatement = connection.prepareStatement(sqlQuery)) {
-            preparedStatement.setString(1, user.getUserName());
-            preparedStatement.setString(2, user.getFirstName());
-            preparedStatement.setString(3, user.getLastName());
-            preparedStatement.setInt(4, user.getRoleId());
-            preparedStatement.setInt(5, id);
-
-            return preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new MyOwnException(PROBLEM_OF_WORKING_WITH_THE_DATABASE, e);
-        }
+                    return preparedStatement.executeUpdate();
+                })
+        );
     }
 }

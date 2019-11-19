@@ -1,7 +1,7 @@
 package net.ukr.dreamsicle.connection;
 
 
-import net.ukr.dreamsicle.exception.MyOwnException;
+import net.ukr.dreamsicle.exception.ApplicationException;
 import org.apache.log4j.Logger;
 import org.postgresql.Driver;
 
@@ -23,18 +23,18 @@ public class ConnectionManager implements AutoCloseable {
         try (InputStream input = ConnectionManager.class.getClassLoader().getResourceAsStream("application.properties")) {
 
             Properties properties = new Properties();
-            properties.load(Optional.ofNullable(input).orElseThrow(() -> new MyOwnException(UNABLE_TO_FIND_CONFIG_PROPERTIES)));
+            properties.load(Optional.ofNullable(input).orElseThrow(() -> new ApplicationException(UNABLE_TO_FIND_CONFIG_PROPERTIES)));
 
             DriverManager.registerDriver(new Driver());
             return DriverManager.getConnection(properties.getProperty("db.url"), properties.getProperty("db.username"), properties.getProperty("db.password"));
         } catch (SQLException | IOException e) {
             LOGGER.error(e);
-            throw new MyOwnException(DATABASE_CONNECTION_ERROR, e);
+            throw new ApplicationException(DATABASE_CONNECTION_ERROR, e);
         }
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         LOGGER.info(CONNECTION_IS_CLOSE);
     }
 }

@@ -1,7 +1,7 @@
 package net.ukr.dreamsicle.dto;
 
 import net.ukr.dreamsicle.entity.User;
-import net.ukr.dreamsicle.exception.MyOwnException;
+import net.ukr.dreamsicle.exception.ApplicationException;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +14,7 @@ public class UserMapper implements Factory<User, UserDto> {
 
     @Override
     public UserDto toDto(User user) {
-        Optional.ofNullable(user).orElseThrow(() -> new MyOwnException(INPUT_PARAMETER_NOT_FOUND));
+        Optional.ofNullable(user).orElseThrow(() -> new ApplicationException(INPUT_PARAMETER_NOT_FOUND));
         return new UserDto.UserDtoBuilder()
                 .id(user.getId())
                 .userName(user.getUserName())
@@ -27,7 +27,7 @@ public class UserMapper implements Factory<User, UserDto> {
 
     @Override
     public User fromDto(UserDto userDto) {
-        Optional.ofNullable(userDto).orElseThrow(() -> new MyOwnException(INPUT_PARAMETER_NOT_FOUND));
+        Optional.ofNullable(userDto).orElseThrow(() -> new ApplicationException(INPUT_PARAMETER_NOT_FOUND));
         return new User(
                 userDto.getUserName(),
                 userDto.getFirstName(),
@@ -38,7 +38,7 @@ public class UserMapper implements Factory<User, UserDto> {
 
     @Override
     public List<UserDto> findAll(List<User> users) {
-        Optional.ofNullable(users).orElseThrow(() -> new MyOwnException(INPUT_PARAMETER_NOT_FOUND));
+        Optional.ofNullable(users).orElseThrow(() -> new ApplicationException(INPUT_PARAMETER_NOT_FOUND));
 
         return users.stream().map(this::toDto).collect(Collectors.toList());
     }

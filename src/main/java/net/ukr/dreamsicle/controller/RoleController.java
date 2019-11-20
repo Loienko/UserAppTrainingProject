@@ -27,12 +27,12 @@ public class RoleController extends HttpServlet {
         String roleId = request.getParameter("roleId");
         LOGGER.info("Get Entity by an id: " + roleId);
 
-        String s = Optional.ofNullable(roleId)
+        String rolesResult = Optional.ofNullable(roleId)
                 .map(ids -> roleService.findById(Integer.parseInt(ids)))
                 .orElse(roleService.findAll());
 
         try {
-            response.getOutputStream().println(s);
+            response.getOutputStream().println(rolesResult);
         } catch (IOException e) {
             throw new ApplicationException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
         }

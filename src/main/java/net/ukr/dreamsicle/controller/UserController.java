@@ -26,12 +26,12 @@ public class UserController extends HttpServlet {
         String id = request.getParameter("id");
         LOGGER.info("Get Entity the id: " + id);
 
-        String s = Optional.ofNullable(id)
+        String usersResult = Optional.ofNullable(id)
                 .map(ids -> userService.findById(Integer.parseInt(ids)))
                 .orElse(userService.findAll());
 
         try {
-            response.getOutputStream().println(s);
+            response.getOutputStream().println(usersResult);
         } catch (IOException e) {
             throw new ApplicationException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
         }

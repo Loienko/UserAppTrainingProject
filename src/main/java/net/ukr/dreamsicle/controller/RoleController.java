@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import static net.ukr.dreamsicle.dao.imp.UserDaoImpl.PROBLEM_OF_WORKING_WITH_THE_DATABASE;
 
+
 @WebServlet("/roles")
 public class RoleController extends HttpServlet {
 
@@ -24,8 +25,8 @@ public class RoleController extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
-        String roleId = request.getParameter("roleId");
-        LOGGER.info("Get Entity by an id: " + roleId);
+        String roleId = request.getParameter("id");
+        LOGGER.info("Get Role by an id: " + roleId);
 
         String rolesResult = Optional.ofNullable(roleId)
                 .map(ids -> roleService.findById(Integer.parseInt(ids)))
@@ -40,18 +41,34 @@ public class RoleController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String roleName = request.getParameter("roleName");
-        String roleDescription = request.getParameter("roleDescription");
+        String roleName = request.getParameter("name");
+        String roleDescription = request.getParameter("description");
 
-        LOGGER.info("Create a new Role with data" + roleName + "; " + roleDescription);
+        LOGGER.info("Create a new Role with data" + roleName + ", " + roleDescription);
 
-        response.getOutputStream().println(roleService.create(
+        response.getWriter().write(roleService.create(
                 RoleDto.builder()
                         .roleName(roleName)
                         .roleDescription(roleDescription)
                         .build()
         ));
+    }
 
-        super.doGet(request, response);
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        String roleId = request.getParameter("id");
+        String roleName = request.getParameter("name");
+        String roleDescription = request.getParameter("description");
+
+        LOGGER.info("Update Role by the id: " + roleId + " with data" + roleName + ", " + roleDescription);
+
+        response.getWriter().write(roleService.update(
+                Integer.parseInt(roleId),
+                RoleDto.builder()
+                        .roleName(roleName)
+                        .roleDescription(roleDescription)
+                        .build()
+        ));
     }
 }

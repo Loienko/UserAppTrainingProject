@@ -8,12 +8,10 @@ import java.util.stream.Collectors;
 
 public class UserService {
 
-    private static final String SORRY_USER_NOT_CREATED = "Sorry, user not created";
     private static final String USER_SUCCESSFULLY_CREATED = "User successfully created";
-    private static final String SORRY_ROLE_NOT_DELETED = "Sorry, role not deleted";
-    private static final String ROLE_SUCCESSFULLY_DELETED = "Role successfully deleted";
-    private static final String ROLE_SUCCESSFULLY_UPDATED = "Role successfully updated";
-    private static final String SORRY_ROLE_NOT_UPDATED = "Sorry, role not updated";
+    private static final String SORRY_USER_NOT_FOUND = "Sorry, user not found";
+    private static final String USER_SUCCESSFULLY_DELETED = "User successfully deleted";
+    private static final String USER_SUCCESSFULLY_UPDATED = "User successfully updated";
     private static final Integer IDS = 0;
 
     private final UserDaoImpl userDao = new UserDaoImpl();
@@ -37,6 +35,14 @@ public class UserService {
     }
 
     public String create(UserDto userDto) {
-        return userDao.create(userMapper.fromDto(userDto)).equals(IDS) ? SORRY_USER_NOT_CREATED : USER_SUCCESSFULLY_CREATED;
+        return userDao.create(userMapper.fromDto(userDto)).equals(IDS) ? SORRY_USER_NOT_FOUND : USER_SUCCESSFULLY_CREATED;
+    }
+
+    public String delete(Integer id) {
+        return userDao.delete(id).equals(IDS) ? SORRY_USER_NOT_FOUND : USER_SUCCESSFULLY_DELETED;
+    }
+
+    public String update(Integer id, UserDto userDto) {
+        return userDao.update(id, userMapper.fromDto(userDto)).equals(IDS) ? SORRY_USER_NOT_FOUND : USER_SUCCESSFULLY_UPDATED;
     }
 }

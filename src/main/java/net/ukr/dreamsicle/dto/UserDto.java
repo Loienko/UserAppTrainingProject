@@ -4,14 +4,11 @@ import java.util.Objects;
 
 public class UserDto {
 
-    private Integer id;
-    private String userName;
-    private String firstName;
-    private String lastName;
-    private Integer roleId;
-
-    public UserDto() {
-    }
+    private final Integer id;
+    private final String userName;
+    private final String firstName;
+    private final String lastName;
+    private final Integer roleId;
 
     public UserDto(Integer id, String userName, String firstName, String lastName, Integer roleId) {
         this.id = id;
@@ -29,40 +26,20 @@ public class UserDto {
         return id;
     }
 
-    public void setId(final Integer id) {
-        this.id = id;
-    }
-
     public String getUserName() {
         return userName;
-    }
-
-    public void setUserName(final String userName) {
-        this.userName = userName;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(final String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(final String lastName) {
-        this.lastName = lastName;
-    }
-
     public Integer getRoleId() {
         return roleId;
-    }
-
-    public void setRoleId(final Integer roleId) {
-        this.roleId = roleId;
     }
 
     @Override
@@ -93,7 +70,7 @@ public class UserDto {
                 '}';
     }
 
-    static class UserDtoBuilder {
+    public static class UserDtoBuilder {
         private Integer id;
         private String userName;
         private String firstName;
@@ -141,6 +118,16 @@ public class UserDto {
 
         public UserDto build() {
             return new UserDto(this.id, this.userName, this.firstName, this.lastName, this.roleId);
+        }
+
+        public String toJson(UserDto userDto) {
+            return "{\n" +
+                    "\t\"id\": \"" + userDto.id + "\",\n" +
+                    "\t\"username\": \"" + userDto.userName + "\",\n" +
+                    "\t\"first_name\": \"" + userDto.firstName + "\",\n" +
+                    "\t\"last_name\": \"" + userDto.lastName + "\",\n" +
+                    "\t\"role\": \"" + userDto.roleId + "\" \n" +
+                    "}";
         }
     }
 }

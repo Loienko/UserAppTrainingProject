@@ -1,7 +1,7 @@
 package net.ukr.dreamsicle.controller;
 
+import net.ukr.dreamsicle.dto.RoleDto;
 import net.ukr.dreamsicle.exception.ApplicationException;
-import net.ukr.dreamsicle.exception.ThrowingConsumer;
 import net.ukr.dreamsicle.service.RoleService;
 import org.apache.log4j.Logger;
 
@@ -23,25 +23,35 @@ public class RoleController extends HttpServlet {
     private static final RoleService roleService = new RoleService();
 
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) {
-        String roleId = req.getParameter("roleId");
+    public void doGet(HttpServletRequest request, HttpServletResponse response) {
+        String roleId = request.getParameter("roleId");
         LOGGER.info("Get Entity by an id: " + roleId);
 
-        Optional.ofNullable(roleId).ifPresentOrElse(
-                (ThrowingConsumer<String>) ids ->
-                        resp.getOutputStream().println(roleService.findById(Integer.parseInt(ids))),
-                () -> {
-                    try {
-                        resp.getOutputStream().println(roleService.findAll());
-                    } catch (IOException e) {
-                        throw new ApplicationException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
-                    }
-                }
-        );
+        String rolesResult = Optional.ofNullable(roleId)
+                .map(ids -> roleService.findById(Integer.parseInt(ids)))
+                .orElse(roleService.findAll());
+
+        try {
+            response.getOutputStream().println(rolesResult);
+        } catch (IOException e) {
+            throw new ApplicationException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
+        }
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String roleName = request.getParameter("roleName");
+        String roleDescription = request.getParameter("roleDescription");
+
+        LOGGER.info("Create a new Role with data" + roleName + "; " + roleDescription);
+
+        response.getOutputStream().println(roleService.create(
+                RoleDto.builder()
+                        .roleName(roleName)
+                        .roleDescription(roleDescription)
+                        .build()
+        ));
+
+        super.doGet(request, response);
     }
 }

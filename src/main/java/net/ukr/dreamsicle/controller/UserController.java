@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static net.ukr.dreamsicle.dao.imp.UserDaoImpl.PROBLEM_OF_WORKING_WITH_THE_DATABASE;
 
@@ -24,7 +25,7 @@ public class UserController extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
         String id = request.getParameter("id");
-        LOGGER.info("Get Entity the id: " + id);
+        LOGGER.info("Get User the id: " + id);
 
         String usersResult = Optional.ofNullable(id)
                 .map(ids -> userService.findById(Integer.parseInt(ids)))
@@ -40,21 +41,29 @@ public class UserController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String userName = request.getParameter("userName");
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        int roleId = Integer.parseInt(request.getParameter("roleId"));
-        LOGGER.info("Create new User with data: " + userName + "; " + firstName + "; " + lastName + "; " + roleId);
+        String userJsonBody = request.getReader().lines().collect(Collectors.joining());
 
-        response.getOutputStream().println(userService.create(
-                UserDto.builder()
-                        .userName(userName)
-                        .firstName(firstName)
-                        .lastName(lastName)
-                        .roleId(roleId)
-                        .build()
+        UserDto userDto = UserDto.builder()
+                .userDtoFromJson(userJsonBody);
+
+        LOGGER.info("Create new User with data: " + userDto.toString());
+
+        response.getWriter().write(userService.create(userDto));
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String idForUpdate = request.getParameter("id");
+        String userJsonBody = request.getReader().lines().collect(Collectors.joining());
+
+        UserDto userDto = UserDto.builder()
+                .userDtoFromJson(userJsonBody);
+
+        LOGGER.info("Update User by the id: " + idForUpdate + " with data: " + userDto.toString());
+
+        response.getWriter().write(userService.update(
+                Integer.parseInt(idForUpdate),
+                userDto
         ));
-
-        super.doGet(request, response);
     }
 }

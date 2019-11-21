@@ -1,6 +1,9 @@
 package net.ukr.dreamsicle.dto;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class RoleDto {
     private final Integer roleId;
@@ -96,6 +99,14 @@ public class RoleDto {
                     .append("\t\"role_name\": \"").append(roleDto.getRoleName()).append("\",\n")
                     .append("\t\"role_description\": \"").append(roleDto.getRoleDescription()).append("\" \n")
                     .append("}").toString();
+        }
+
+        public RoleDto roleDtoFromJson(String body) {
+            List<String> collect = Stream.of(body.split(",\t"))
+                    .map(s -> s.strip().replace("\"", "").replace("}", "").split(": ")[1].trim())
+                    .collect(Collectors.toList());
+
+            return new RoleDto(null, collect.get(0), collect.get(1));
         }
     }
 }

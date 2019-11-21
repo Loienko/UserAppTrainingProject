@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static net.ukr.dreamsicle.dao.imp.UserDaoImpl.PROBLEM_OF_WORKING_WITH_THE_DATABASE;
 
@@ -24,8 +25,8 @@ public class RoleController extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
-        String roleId = request.getParameter("roleId");
-        LOGGER.info("Get Entity by an id: " + roleId);
+        String roleId = request.getParameter("id");
+        LOGGER.info("Get Role by an id: " + roleId);
 
         String rolesResult = Optional.ofNullable(roleId)
                 .map(ids -> roleService.findById(Integer.parseInt(ids)))
@@ -40,18 +41,30 @@ public class RoleController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String roleName = request.getParameter("roleName");
-        String roleDescription = request.getParameter("roleDescription");
+        String roleJsonBody = request.getReader().lines().collect(Collectors.joining());
 
-        LOGGER.info("Create a new Role with data" + roleName + "; " + roleDescription);
+        RoleDto roleDto = RoleDto.builder()
+                .roleDtoFromJson(roleJsonBody);
 
-        response.getOutputStream().println(roleService.create(
-                RoleDto.builder()
-                        .roleName(roleName)
-                        .roleDescription(roleDescription)
-                        .build()
+        LOGGER.info("Create a new Role with data: " + roleDto.toString());
+
+        response.getWriter().write(roleService.create(roleDto));
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        String idForUpdate = request.getParameter("id");
+        String roleJsonBody = request.getReader().lines().collect(Collectors.joining());
+
+        RoleDto roleDto = RoleDto.builder()
+                .roleDtoFromJson(roleJsonBody);
+
+        LOGGER.info("Update Role by the id: " + idForUpdate + " with data: " + roleDto.toString());
+
+        response.getWriter().write(roleService.update(
+                Integer.parseInt(idForUpdate),
+                roleDto
         ));
-
-        super.doGet(request, response);
     }
 }

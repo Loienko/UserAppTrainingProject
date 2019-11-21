@@ -1,6 +1,9 @@
 package net.ukr.dreamsicle.dto;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class UserDto {
 
@@ -128,6 +131,14 @@ public class UserDto {
                     "\t\"last_name\": \"" + userDto.lastName + "\",\n" +
                     "\t\"role\": \"" + userDto.roleId + "\" \n" +
                     "}";
+        }
+
+        public UserDto userDtoFromJson(String body) {
+            List<String> collect = Stream.of(body.split(",\t"))
+                    .map(s -> s.strip().replace("\"", "").replace("}", "").split(": ")[1].trim())
+                    .collect(Collectors.toList());
+
+            return new UserDto(null, collect.get(0), collect.get(1), collect.get(2), Integer.parseInt(collect.get(3)));
         }
     }
 }

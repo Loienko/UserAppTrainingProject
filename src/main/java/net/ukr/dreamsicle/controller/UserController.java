@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static net.ukr.dreamsicle.dao.imp.UserDaoImpl.PROBLEM_OF_WORKING_WITH_THE_DATABASE;
 
@@ -40,40 +41,29 @@ public class UserController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String userName = request.getParameter("username");
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        int roleId = Integer.parseInt(request.getParameter("roleId"));
-        LOGGER.info("Create new User with data: " + userName + ", " + firstName + ", " + lastName + ", " + roleId);
+        String userJsonBody = request.getReader().lines().collect(Collectors.joining());
 
-        response.getWriter().write(userService.create(
-                UserDto.builder()
-                        .userName(userName)
-                        .firstName(firstName)
-                        .lastName(lastName)
-                        .roleId(roleId)
-                        .build()
-        ));
+        UserDto userDto = UserDto.builder()
+                .userDtoFromJson(userJsonBody);
+
+        LOGGER.info("Create new User with data: " + userDto.toString());
+
+        response.getWriter().write(userService.create(userDto));
     }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String idForUpdate = request.getParameter("id");
-        String userName = request.getParameter("userName");
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        int roleId = Integer.parseInt(request.getParameter("roleId"));
+        String userJsonBody = request.getReader().lines().collect(Collectors.joining());
 
-        LOGGER.info("Update User by the id: " + idForUpdate + " with data: " + userName + ", " + firstName + ", " + lastName + ", " + roleId);
+        UserDto userDto = UserDto.builder()
+                .userDtoFromJson(userJsonBody);
+
+        LOGGER.info("Update User by the id: " + idForUpdate + " with data: " + userDto.toString());
 
         response.getWriter().write(userService.update(
                 Integer.parseInt(idForUpdate),
-                UserDto.builder()
-                        .userName(userName)
-                        .firstName(firstName)
-                        .lastName(lastName)
-                        .roleId(roleId)
-                        .build()
+                userDto
         ));
     }
 }

@@ -102,11 +102,11 @@ public class RoleDto {
         }
 
         public RoleDto roleDtoFromJson(String body) {
-            List<String> collect = Stream.of(body.split(",\t"))
+            List<String> roleDtoParseList = Stream.of(body.split(",\t"))
                     .map(s -> s.strip().replace("\"", "").replace("}", "").split(": ")[1].trim())
                     .collect(Collectors.toList());
 
-            return new RoleDto(null, collect.get(0), collect.get(1));
+            return new RoleDto(null, roleDtoParseList.get(0), roleDtoParseList.get(1));
         }
     }
 }

@@ -42,29 +42,37 @@ public class RoleController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String roleJsonBody = request.getReader().lines().collect(Collectors.joining());
+        LOGGER.debug("Create a new Role with Body: " + roleJsonBody);
 
-        RoleDto roleDto = RoleDto.builder()
-                .roleDtoFromJson(roleJsonBody);
-
-        LOGGER.info("Create a new Role with data: " + roleDto.toString());
-
-        response.getWriter().write(roleService.create(roleDto));
+        response.getWriter().write(
+                roleService.create(
+                        RoleDto.builder()
+                                .roleDtoFromJson(roleJsonBody)
+                )
+        );
     }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String idForUpdate = request.getParameter("id");
+        LOGGER.info("Update Role by the id: " + idForUpdate);
         String roleJsonBody = request.getReader().lines().collect(Collectors.joining());
+        LOGGER.debug("Update Role by the Body: " + roleJsonBody);
 
-        RoleDto roleDto = RoleDto.builder()
-                .roleDtoFromJson(roleJsonBody);
+        response.getWriter().write(
+                roleService.update(
+                        Integer.parseInt(idForUpdate),
+                        RoleDto.builder().roleDtoFromJson(roleJsonBody)
+                ));
+    }
 
-        LOGGER.info("Update Role by the id: " + idForUpdate + " with data: " + roleDto.toString());
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        response.getWriter().write(roleService.update(
-                Integer.parseInt(idForUpdate),
-                roleDto
-        ));
+        String id = request.getParameter("id");
+        LOGGER.info("Delete Entity by the id: " + id);
+
+        response.getWriter().write(roleService.delete(Integer.parseInt(id)));
     }
 }

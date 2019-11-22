@@ -10,7 +10,6 @@ import java.util.List;
 
 public class RoleDaoImpl extends AbstractDao implements Dao<Role> {
 
-    public static final String PROBLEM_OF_WORKING_WITH_THE_DATABASE = "Sorry, problem of working with the database.\t";
     private static final String DELETE = "DELETE FROM users.public.role WHERE role_id = ?";
     private static final String UPDATE = "Update users.public.role set role_name = ?, role_description = ? WHERE role_id = ?";
     private static final String CREATE = "INSERT INTO users.public.role(role_name, role_description) VALUES (?, ?)";

@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static net.ukr.dreamsicle.dao.imp.UserDaoImpl.PROBLEM_OF_WORKING_WITH_THE_DATABASE;
+import static net.ukr.dreamsicle.util.Constants.PROBLEM_OF_WORKING_WITH_THE_DATABASE;
 
 @WebServlet("/roles")
 public class RoleController extends HttpServlet {
@@ -35,6 +35,7 @@ public class RoleController extends HttpServlet {
         try {
             response.getOutputStream().println(rolesResult);
         } catch (IOException e) {
+            LOGGER.error(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
             throw new ApplicationException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
         }
     }

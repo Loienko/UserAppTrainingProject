@@ -1,14 +1,13 @@
 package net.ukr.dreamsicle.entity;
 
 import net.ukr.dreamsicle.exception.ApplicationException;
+import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
-import static net.ukr.dreamsicle.dao.imp.RoleDaoImpl.PROBLEM_OF_WORKING_WITH_THE_DATABASE;
-
-public class User {
+public class User implements DreamsicleUtilEntity {
     private final Integer id;
     private final String userName;
     private final String firstName;
@@ -80,6 +79,7 @@ public class User {
     }
 
     public static class UserBuilder {
+        private static final Logger LOGGER = Logger.getLogger(User.UserBuilder.class);
         private Integer id;
         private String userName;
         private String firstName;
@@ -139,6 +139,7 @@ public class User {
                         resultSet.getInt(5)
                 );
             } catch (SQLException e) {
+                LOGGER.error(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
                 throw new ApplicationException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
             }
         }

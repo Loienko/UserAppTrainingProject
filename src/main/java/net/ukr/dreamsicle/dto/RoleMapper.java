@@ -9,11 +9,11 @@ import java.util.stream.Collectors;
 
 public class RoleMapper implements Factory<Role, RoleDto> {
 
-    String INPUT_PARAMETER_NOT_FOUND = "Input parameter not found";
+    private static final String INPUT_PARAMETER_FOR_ROLE_NOT_FOUND = "Input parameter for Role not found";
 
     @Override
     public RoleDto toDto(Role role) {
-        Optional.ofNullable(role).orElseThrow(() -> new ApplicationException(INPUT_PARAMETER_NOT_FOUND));
+        Optional.ofNullable(role).orElseThrow(() -> new ApplicationException(INPUT_PARAMETER_FOR_ROLE_NOT_FOUND));
         return new RoleDto.RoleDtoBuilder()
                 .roleId(role.getRoleId())
                 .roleName(role.getRoleName())
@@ -23,7 +23,7 @@ public class RoleMapper implements Factory<Role, RoleDto> {
 
     @Override
     public Role fromDto(RoleDto roleDto) {
-        Optional.ofNullable(roleDto).orElseThrow(() -> new ApplicationException(INPUT_PARAMETER_NOT_FOUND));
+        Optional.ofNullable(roleDto).orElseThrow(() -> new ApplicationException(INPUT_PARAMETER_FOR_ROLE_NOT_FOUND));
         return Role.builder()
                 .roleId(roleDto.getRoleId())
                 .roleName(roleDto.getRoleName())
@@ -33,7 +33,7 @@ public class RoleMapper implements Factory<Role, RoleDto> {
 
     @Override
     public List<RoleDto> findAll(List<Role> roles) {
-        Optional.ofNullable(roles).orElseThrow(() -> new ApplicationException(INPUT_PARAMETER_NOT_FOUND));
+        Optional.ofNullable(roles).orElseThrow(() -> new ApplicationException(INPUT_PARAMETER_FOR_ROLE_NOT_FOUND));
 
         return roles.stream().map(this::toDto).collect(Collectors.toList());
     }

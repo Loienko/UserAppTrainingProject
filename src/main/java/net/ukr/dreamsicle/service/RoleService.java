@@ -6,14 +6,13 @@ import net.ukr.dreamsicle.dto.RoleMapper;
 
 import java.util.stream.Collectors;
 
-public class RoleService {
+public class RoleService implements DreamsicleUtilService {
 
     private static final String ROLE_SUCCESSFULLY_CREATED = "Role successfully created";
     private static final String SORRY_ROLE_NOT_FOUND = "Sorry, role not found";
     private static final String ROLE_SUCCESSFULLY_UPDATED = "Role successfully updated";
     private static final String ROLE_SUCCESSFULLY_DELETED = "Role successfully deleted";
     private static final Integer IDS = 0;
-
     private final RoleDaoImpl roleDao = new RoleDaoImpl();
     private final RoleMapper roleMapper = new RoleMapper();
 

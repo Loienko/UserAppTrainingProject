@@ -10,7 +10,6 @@ import java.util.List;
 
 public class UserDaoImpl extends AbstractDao implements Dao<User> {
 
-    public static final String PROBLEM_OF_WORKING_WITH_THE_DATABASE = "Sorry, problem of working with the database.\t";
     private static final String FIND_ALL = "SELECT * FROM users.public.user ORDER BY id";
     private static final String CREATE = "INSERT INTO users.public.user(username, first_name, last_name, role_id) VALUES (?, ?, ?, ?)";
     private static final String FIND_BY_ID = "SELECT * FROM users.public.user WHERE id = ?";

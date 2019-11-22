@@ -14,10 +14,8 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static net.ukr.dreamsicle.util.Constants.PROBLEM_OF_WORKING_WITH_THE_DATABASE;
-
 @WebServlet("/users")
-public class UserController extends HttpServlet {
+public class UserController extends HttpServlet implements DreamsicleUtilController {
     private static final Logger LOGGER = Logger.getLogger(UserController.class);
 
     private static final UserService userService = new UserService();

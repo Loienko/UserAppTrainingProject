@@ -14,10 +14,8 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static net.ukr.dreamsicle.util.Constants.PROBLEM_OF_WORKING_WITH_THE_DATABASE;
-
 @WebServlet("/roles")
-public class RoleController extends HttpServlet {
+public class RoleController extends HttpServlet implements DreamsicleUtilController {
 
     private static final Logger LOGGER = Logger.getLogger(RoleController.class);
 

@@ -7,9 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
-import static net.ukr.dreamsicle.util.Constants.PROBLEM_OF_WORKING_WITH_THE_DATABASE;
-
-public class Role {
+public class Role implements DreamsicleUtilEntity {
     private final Integer roleId;
     private final String roleName;
     private final String roleDescription;

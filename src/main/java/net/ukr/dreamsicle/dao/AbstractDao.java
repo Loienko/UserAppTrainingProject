@@ -9,10 +9,7 @@ import java.sql.SQLException;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static net.ukr.dreamsicle.util.Constants.CONNECTION_CLOSE;
-import static net.ukr.dreamsicle.util.Constants.PROBLEM_OF_WORKING_WITH_THE_DATABASE;
-
-public abstract class AbstractDao implements AutoCloseable {
+public abstract class AbstractDao implements AutoCloseable, DreamsicleUtilDao {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractDao.class);
 

@@ -6,10 +6,12 @@ import net.ukr.dreamsicle.dto.UserMapper;
 
 import java.util.stream.Collectors;
 
-import static net.ukr.dreamsicle.util.Constants.*;
+public class UserService implements DreamsicleUtilService {
 
-public class UserService {
-
+    private static final String USER_SUCCESSFULLY_CREATED = "User successfully created";
+    private static final String SORRY_USER_NOT_FOUND = "Sorry, user not found";
+    private static final String USER_SUCCESSFULLY_DELETED = "User successfully deleted";
+    private static final String USER_SUCCESSFULLY_UPDATED = "User successfully updated";
     private final UserDaoImpl userDao = new UserDaoImpl();
     private final UserMapper userMapper = new UserMapper();
 

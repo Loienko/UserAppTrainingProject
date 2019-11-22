@@ -1,6 +1,5 @@
 package net.ukr.dreamsicle.connection;
 
-
 import net.ukr.dreamsicle.exception.ApplicationException;
 import org.apache.log4j.Logger;
 import org.postgresql.Driver;
@@ -13,9 +12,10 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Properties;
 
-import static net.ukr.dreamsicle.util.Constants.*;
-
 public class ConnectionManager implements AutoCloseable {
+    private static final String UNABLE_TO_FIND_CONFIG_PROPERTIES = "Sorry, unable to find application.properties.";
+    private static final String CONNECTION_CLOSE = "Connection close.";
+    private static final String DATABASE_CONNECTION_ERROR = "Database connection error! ";
     private static final Logger LOGGER = Logger.getLogger(ConnectionManager.class);
 
     public static Connection getConnection() {

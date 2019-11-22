@@ -7,9 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
-import static net.ukr.dreamsicle.util.Constants.PROBLEM_OF_WORKING_WITH_THE_DATABASE;
-
-public class User {
+public class User implements DreamsicleUtilEntity {
     private final Integer id;
     private final String userName;
     private final String firstName;

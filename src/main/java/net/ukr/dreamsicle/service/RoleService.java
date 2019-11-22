@@ -8,11 +8,8 @@ import java.util.stream.Collectors;
 
 public class RoleService implements DreamsicleUtilService {
 
-    private static final String ROLE_SUCCESSFULLY_CREATED = "Role successfully created";
-    private static final String SORRY_ROLE_NOT_FOUND = "Sorry, role not found";
-    private static final String ROLE_SUCCESSFULLY_UPDATED = "Role successfully updated";
-    private static final String ROLE_SUCCESSFULLY_DELETED = "Role successfully deleted";
-    private static final Integer IDS = 0;
+    private static final String ROLE = "Role";
+
     private final RoleDaoImpl roleDao = new RoleDaoImpl();
     private final RoleMapper roleMapper = new RoleMapper();
 
@@ -34,14 +31,14 @@ public class RoleService implements DreamsicleUtilService {
     }
 
     public String create(RoleDto roleDto) {
-        return roleDao.create(roleMapper.fromDto(roleDto)).equals(IDS) ? SORRY_ROLE_NOT_FOUND : ROLE_SUCCESSFULLY_CREATED;
+        return roleDao.create(roleMapper.fromDto(roleDto)).equals(IDS) ? String.format(SORRY_ENTITY_NOT_FOUND, ROLE) : String.format(SUCCESSFULLY_CREATED, ROLE);
     }
 
     public String delete(Integer id) {
-        return roleDao.delete(id).equals(IDS) ? SORRY_ROLE_NOT_FOUND : ROLE_SUCCESSFULLY_DELETED;
+        return roleDao.delete(id).equals(IDS) ? String.format(SORRY_ENTITY_NOT_FOUND, ROLE) : String.format(SUCCESSFULLY_DELETED, ROLE);
     }
 
     public String update(Integer id, RoleDto roleDto) {
-        return roleDao.update(id, roleMapper.fromDto(roleDto)).equals(IDS) ? SORRY_ROLE_NOT_FOUND : ROLE_SUCCESSFULLY_UPDATED;
+        return roleDao.update(id, roleMapper.fromDto(roleDto)).equals(IDS) ? String.format(SORRY_ENTITY_NOT_FOUND, ROLE) : String.format(SUCCESSFULLY_UPDATED, ROLE);
     }
 }

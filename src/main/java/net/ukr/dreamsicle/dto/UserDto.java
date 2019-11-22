@@ -134,11 +134,11 @@ public class UserDto {
         }
 
         public UserDto userDtoFromJson(String body) {
-            List<String> collect = Stream.of(body.split(",\t"))
+            List<String> userDtoParseList = Stream.of(body.split(",\t"))
                     .map(s -> s.strip().replace("\"", "").replace("}", "").split(": ")[1].trim())
                     .collect(Collectors.toList());
 
-            return new UserDto(null, collect.get(0), collect.get(1), collect.get(2), Integer.parseInt(collect.get(3)));
+            return new UserDto(null, userDtoParseList.get(0), userDtoParseList.get(1), userDtoParseList.get(2), Integer.parseInt(userDtoParseList.get(3)));
         }
     }
 }

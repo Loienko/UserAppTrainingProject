@@ -40,30 +40,37 @@ public class UserController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         String userJsonBody = request.getReader().lines().collect(Collectors.joining());
+        LOGGER.debug("Create a new User with Body: " + userJsonBody);
 
-        UserDto userDto = UserDto.builder()
-                .userDtoFromJson(userJsonBody);
-
-        LOGGER.info("Create new User with data: " + userDto.toString());
-
-        response.getWriter().write(userService.create(userDto));
+        response.getWriter().write(
+                userService.create(
+                        UserDto.builder()
+                                .userDtoFromJson(userJsonBody)
+                )
+        );
     }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String idForUpdate = request.getParameter("id");
+        LOGGER.info("Update User by the id: " + idForUpdate);
         String userJsonBody = request.getReader().lines().collect(Collectors.joining());
+        LOGGER.debug("Update User by the Body: " + userJsonBody);
 
-        UserDto userDto = UserDto.builder()
-                .userDtoFromJson(userJsonBody);
+        response.getWriter().write(
+                userService.update(
+                        Integer.parseInt(idForUpdate),
+                        UserDto.builder().userDtoFromJson(userJsonBody)
+                ));
+    }
 
-        LOGGER.info("Update User by the id: " + idForUpdate + " with data: " + userDto.toString());
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String id = request.getParameter("id");
+        LOGGER.info("Delete User by the id: " + id);
 
-        response.getWriter().write(userService.update(
-                Integer.parseInt(idForUpdate),
-                userDto
-        ));
+        response.getWriter().write(userService.delete(Integer.parseInt(id)));
     }
 }

@@ -1,7 +1,7 @@
 package net.ukr.dreamsicle.controller;
 
 import net.ukr.dreamsicle.dto.UserDto;
-import net.ukr.dreamsicle.exception.ApplicationException;
+import net.ukr.dreamsicle.exception.DreamsicleException;
 import net.ukr.dreamsicle.service.UserService;
 import org.apache.log4j.Logger;
 
@@ -33,7 +33,7 @@ public class UserController extends HttpServlet implements DreamsicleUtilControl
             response.getOutputStream().println(usersResult);
         } catch (IOException e) {
             LOGGER.error(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e.fillInStackTrace());
-            throw new ApplicationException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
+            throw new DreamsicleException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e, 400);
         }
     }
 

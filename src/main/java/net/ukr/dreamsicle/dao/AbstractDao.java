@@ -1,7 +1,7 @@
 package net.ukr.dreamsicle.dao;
 
 import net.ukr.dreamsicle.connection.ConnectionManager;
-import net.ukr.dreamsicle.exception.ApplicationException;
+import net.ukr.dreamsicle.exception.DreamsicleException;
 import org.apache.log4j.Logger;
 
 import java.sql.PreparedStatement;
@@ -19,7 +19,7 @@ public abstract class AbstractDao implements AutoCloseable, DreamsicleUtilDao {
             return functions.apply(preparedStatement);
         } catch (SQLException e) {
             LOGGER.error(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getStackTrace(), e);
-            throw new ApplicationException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
+            throw new DreamsicleException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e, 503);
         }
     }
 

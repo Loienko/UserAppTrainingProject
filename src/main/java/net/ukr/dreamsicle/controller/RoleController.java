@@ -1,7 +1,7 @@
 package net.ukr.dreamsicle.controller;
 
 import net.ukr.dreamsicle.dto.RoleDto;
-import net.ukr.dreamsicle.exception.ApplicationException;
+import net.ukr.dreamsicle.exception.DreamsicleException;
 import net.ukr.dreamsicle.service.RoleService;
 import org.apache.log4j.Logger;
 
@@ -34,7 +34,7 @@ public class RoleController extends HttpServlet implements DreamsicleUtilControl
             response.getOutputStream().println(rolesResult);
         } catch (IOException e) {
             LOGGER.error(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
-            throw new ApplicationException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
+            throw new DreamsicleException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e, 400);
         }
     }
 

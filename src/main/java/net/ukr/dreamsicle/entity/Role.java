@@ -1,6 +1,6 @@
 package net.ukr.dreamsicle.entity;
 
-import net.ukr.dreamsicle.exception.ApplicationException;
+import net.ukr.dreamsicle.exception.DreamsicleException;
 import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
@@ -102,7 +102,7 @@ public class Role implements DreamsicleUtilEntity {
                         resultSet.getString(3));
             } catch (SQLException e) {
                 LOGGER.error(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
-                throw new ApplicationException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e);
+                throw new DreamsicleException(PROBLEM_OF_WORKING_WITH_THE_DATABASE + e.getMessage(), e, 503);
             }
         }
     }
